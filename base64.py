@@ -3,39 +3,66 @@
 
 import Base64Table
 
-t = "sure."
-liste = []
-for letter in t:
-    test = bin(ord(letter))[2:]
 
-    if len(test) != 8:
-        diff = 8 - len(test)
+# Encode in Base64
+def encode(string):
+    fullBinary = ""
 
-        for i in range(0, diff):
-            test = "0" + test
+    # Convert each letter of string in binary of 1 octet
+    # thank to zfill
+    for letter in string:
+        fullBinary += bin(ord(letter))[2:].zfill(8)
 
-    liste.append(test)
+    # Found on -> https://gist.github.com/bellbind/255287
+    # I add .ljust(6, '0') -> to always have 6 bits
+    # split fullBinary on 6bits
+    # sixBinary is a generator
+    sixBinary = (fullBinary[i:i + 6].ljust(6, '0')
+                 for i in range(0, len(fullBinary), 6))
+
+    stringEncode = ""
+    s2 = ""
+
+    # This is where the conversion from binary (6bits) to
+    # character happens
+    # s2 is to keep track of the bits numbers
+    for six in sixBinary:
+        s2 += six
+        stringEncode += Base64Table.dictio[six]
+
+    # Depending of the case add one or two -> '='
+    if (len(s2) + 6) % 24 == 0:
+        stringEncode += "="
+    elif (len(s2) + 12) % 24 == 0:
+        stringEncode += "=="
+
+    return stringEncode
 
 
-liste2 = []
-fullString = "".join(liste)
+# Decode in Base64
+def decode(string):
+    fullBinary = ""
 
-# Found -> https://gist.github.com/bellbind/255287
-te = (fullString[i:i + 6] for i in range(0, len(fullString), 6))
+    # Convert each letter of string in binary of 6 bits
+    # thank to the switchDiction if letter isn't an '='
+    for letter in string:
+        if letter != "=":
+            fullBinary += Base64Table.switchDictio[letter]
 
-l = ""
-s2 = ""
-for t in te:
-    if len(t) != 6:
-        size = 6 - len(t)
-        for o in range(0, size):
-            t += '0'
-    s2 += t
-    l += Base64Table.dictio[t]
+    # split fullBinary on 8bits
+    # heightBinary is a generator
+    heightBinary = (fullBinary[i:i + 8] for i in range(0, len(fullBinary), 8))
 
-if (len(s2) + 6) % 24 == 0:
-    l += "="
-elif (len(s2) + 12) % 24 == 0:
-    l += "=="
+    stringDecode = ""
 
-print(l)
+    # This is where the conversion from binary of 1 octet to
+    # character happens
+    for height in heightBinary:
+        stringDecode += chr(int(height, 2))
+
+    return stringDecode
+
+
+if __name__ == "__main__":
+    print(encode("Hi"))
+    print(decode("dGhpYmF1bHQ="))

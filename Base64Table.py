@@ -64,3 +64,5 @@ dictio = {
     "111110": '+',
     "111111": '/'
 }
+
+switchDictio = {v: k for k, v in dictio.items()}
