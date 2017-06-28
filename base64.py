@@ -3,7 +3,6 @@
 
 import Base64Table
 
-
 # Encode in Base64
 def encode(string):
     fullBinary = ""
@@ -64,5 +63,18 @@ def decode(string):
 
 
 if __name__ == "__main__":
-    print(encode("Hi"))
-    print(decode("dGhpYmF1bHQ="))
+
+    print("[Morse, Thibault Galbourdin (github.com/Liodeus)]")
+    print("1- Encode")
+    print("2- Decode \n")
+
+    choice = input("Choice : ")
+
+    if choice == "1":
+        message = input("Message to encode : ")
+        print(encode(message))
+    elif choice == "2":
+        message = input("Message to decode: ")
+        print(decode(message))
+    else:
+        print("Error")
