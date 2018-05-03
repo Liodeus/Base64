@@ -64,7 +64,7 @@ def decode(string):
 
 if __name__ == "__main__":
 
-    print("[Morse, Thibault Galbourdin (github.com/Liodeus)]")
+    print("[Base64, Thibault Galbourdin (github.com/Liodeus)]")
     print("1- Encode")
     print("2- Decode \n")
 
